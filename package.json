@@ -1,0 +1,13 @@
+{
+  "name": "linkedin-to-markdown",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LinkedIn bookmarklet + userscript exporter for local markdown download.",
+  "scripts": {
+    "build": "npm run build:userscript && npm run build:bookmarklet",
+    "build:userscript": "python3 tools/build_userscript.py --infile src/li_export_md.js --outfile userscript/linkedin-export-md.user.js",
+    "build:bookmarklet": "python3 tools/build_bookmarklet.py --infile src/li_export_md.js --out-bookmarklet docs/bookmarklet.txt --html docs/index.html",
+    "dev": "python3 -m http.server 8787 --directory docs",
+    "check": "node --check src/li_export_md.js && node --check userscript/linkedin-export-md.user.js && python3 -m py_compile tools/build_bookmarklet.py tools/build_userscript.py"
+  }
+}
