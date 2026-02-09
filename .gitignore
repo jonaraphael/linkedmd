@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Python caches
+__pycache__/
+tools/__pycache__/
+
+# Local browser profile/auth scratch dirs
+.linkedin-auth/
+.linkedin-auth-chrome/
+
+# OS/editor noise
+.DS_Store
+*.swp

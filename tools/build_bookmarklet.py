@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import argparse
-import re
 from pathlib import Path
 from urllib.parse import quote
 
@@ -13,17 +12,11 @@ def build_bookmarklet(js: str) -> str:
     return "javascript:" + quote(payload, safe="!()*-._~")
 
 
-def inject_into_html(html: str, bookmarklet_url: str) -> str:
-    if PLACEHOLDER in html:
-        return html.replace(PLACEHOLDER, bookmarklet_url)
-
-    # If already injected, keep updates idempotent by replacing existing javascript URL in href.
-    return re.sub(
-        r'href="(?:__BOOKMARKLET_URL__|javascript:[^"]*)"',
-        f'href="{bookmarklet_url}"',
-        html,
-        count=1,
-    )
+def inject_into_html(path: Path, bookmarklet_url: str) -> None:
+    html = path.read_text(encoding="utf-8")
+    if PLACEHOLDER not in html:
+        return
+    path.write_text(html.replace(PLACEHOLDER, bookmarklet_url), encoding="utf-8")
 
 
 def main() -> None:
@@ -36,8 +29,12 @@ def main() -> None:
     )
     ap.add_argument(
         "--html",
-        default="docs/index.html",
-        help="HTML file to inject bookmarklet into (in-place)",
+        help="Optional HTML file that contains __BOOKMARKLET_URL__ placeholder",
+    )
+    ap.add_argument(
+        "--print-url",
+        action="store_true",
+        help="Print full javascript: bookmarklet URL to stdout",
     )
     args = ap.parse_args()
 
@@ -48,13 +45,14 @@ def main() -> None:
     out_bml.parent.mkdir(parents=True, exist_ok=True)
     out_bml.write_text(bml + "\n", encoding="utf-8")
 
-    html_path = Path(args.html)
-    if html_path.exists():
-        html = html_path.read_text(encoding="utf-8")
-        html2 = inject_into_html(html, bml)
-        html_path.write_text(html2, encoding="utf-8")
+    if args.html:
+        html_path = Path(args.html)
+        if html_path.exists():
+            inject_into_html(html_path, bml)
 
-    print(bml)
+    print(out_bml)
+    if args.print_url:
+        print(bml)
 
 
 if __name__ == "__main__":
