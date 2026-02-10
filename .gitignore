@@ -4,6 +4,7 @@ node_modules/
 # Python caches
 __pycache__/
 tools/__pycache__/
+dist/
 
 # Local browser profile/auth scratch dirs
 .linkedin-auth/

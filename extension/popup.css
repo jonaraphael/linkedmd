@@ -1,0 +1,137 @@
+:root {
+  --ink: #102116;
+  --muted: #4f6457;
+  --line: #c9d7cc;
+  --card: #ffffff;
+  --accent: #0f6f43;
+  --accent-2: #0b5840;
+  --danger: #8f1c1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 8% -20%, rgba(255, 255, 255, 0.8), transparent 44%),
+    radial-gradient(circle at 90% 2%, rgba(214, 240, 221, 0.9), transparent 34%),
+    linear-gradient(165deg, #f2f4f1, #e8efe9);
+}
+
+.shell {
+  padding: 14px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), #1f9c63);
+  box-shadow: 0 10px 24px rgba(9, 84, 56, 0.28);
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.hero p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 12px;
+  box-shadow: 0 12px 28px rgba(19, 42, 29, 0.09);
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #a8b5ad;
+}
+
+.dot.ready {
+  background: #169158;
+}
+
+.dot.bad {
+  background: var(--danger);
+}
+
+.primary {
+  width: 100%;
+  border: 0;
+  border-radius: 11px;
+  padding: 11px 12px;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  cursor: pointer;
+}
+
+.primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.hint {
+  margin: 8px 0 0;
+  min-height: 16px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.hint.error {
+  color: var(--danger);
+}
+
+.meta {
+  margin-top: 10px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  font-size: 0.72rem;
+  color: #234132;
+  border: 1px solid #c8d8cb;
+  background: #f6faf7;
+  border-radius: 999px;
+  padding: 3px 8px;
+}

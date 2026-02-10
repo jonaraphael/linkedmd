@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LinkedMD Privacy Policy</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+        color: #102116;
+        background: linear-gradient(165deg, #f2f5f2, #e9f0ea);
+      }
+      .wrap {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 34px 20px 60px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #c9d9cd;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 14px 34px rgba(16, 40, 26, 0.08);
+      }
+      h1 {
+        margin-top: 0;
+      }
+      h2 {
+        margin-top: 18px;
+      }
+      p,
+      li {
+        line-height: 1.5;
+      }
+      code {
+        background: #f4f8f5;
+        border: 1px solid #d2dfd6;
+        padding: 1px 6px;
+        border-radius: 6px;
+      }
+      .meta {
+        color: #4a6252;
+      }
+      a {
+        color: #0e6d43;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <article class="card">
+        <h1>LinkedMD Privacy Policy</h1>
+        <p class="meta">Last updated: February 9, 2026</p>
+
+        <p>
+          LinkedMD exports the current LinkedIn profile page to a local Markdown file. The extension
+          is designed for local-first operation.
+        </p>
+
+        <h2>What LinkedMD does</h2>
+        <ul>
+          <li>Reads visible content from the active LinkedIn profile tab.</li>
+          <li>Formats profile information as Markdown.</li>
+          <li>Triggers a local file download in your browser.</li>
+        </ul>
+
+        <h2>Data collection</h2>
+        <p>
+          LinkedMD does not intentionally collect, sell, or broker user data. This repository does not
+          include a backend service for profile ingestion.
+        </p>
+
+        <h2>Website content handling</h2>
+        <p>
+          LinkedMD accesses website content on LinkedIn profile pages only to provide its single purpose:
+          exporting the current profile to a local Markdown file. The extension does not require a
+          project-hosted backend for normal use.
+        </p>
+
+        <h2>Data transmission</h2>
+        <p>
+          LinkedMD does not require an account and does not transmit exported profile data to a
+          project-owned server during normal extension usage.
+        </p>
+
+        <h2>Permissions</h2>
+        <ul>
+          <li><code>activeTab</code> and <code>scripting</code> are used to run export logic in the active page.</li>
+          <li><code>tabs</code> is used for extension workflow and command handling.</li>
+          <li><code>contextMenus</code> is used for right-click export.</li>
+          <li><code>host_permissions</code> are limited to <code>https://www.linkedin.com/*</code>.</li>
+        </ul>
+
+        <h2>User responsibility</h2>
+        <p>
+          Use LinkedMD only on data you are authorized to access and process, and in compliance with
+          applicable laws, platform terms, and organizational policies.
+        </p>
+
+        <h2>Chrome Web Store Limited Use disclosure</h2>
+        <p>
+          LinkedMD's use of user data adheres to the Chrome Web Store User Data Policy, including the
+          Limited Use requirements. Data is used only to provide the user-facing export functionality.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          Support: <a href="https://github.com/jonaraphael/linkedmd/issues">GitHub Issues</a>
+        </p>
+      </article>
+    </main>
+  </body>
+</html>

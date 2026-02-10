@@ -1,16 +1,5 @@
-// ==UserScript==
-// @name         LinkedIn -> Markdown Export (local-only)
-// @namespace    local
-// @version      1.0
-// @description  Adds an "Export MD" button on LinkedIn profile pages; downloads dense markdown export.
-// @match        https://www.linkedin.com/*
-// @grant        none
-// ==/UserScript==
-
 (function () {
   "use strict";
-
-  const BTN_ID = "li-export-md-userscript-btn";
 
   function buildExporter() {
     "use strict";
@@ -1676,45 +1665,66 @@
     window.__li_export_md__ = buildExporter();
   }
 
-  function mount() {
-    if (!document.body || document.getElementById(BTN_ID)) return;
+  let running = false;
 
-    const btn = document.createElement("button");
-    btn.id = BTN_ID;
-    btn.textContent = "Export MD";
-    btn.style.cssText = [
-      "position:fixed",
-      "top:12px",
-      "right:12px",
-      "z-index:2147483647",
-      "padding:8px 10px",
-      "border-radius:10px",
-      "border:1px solid rgba(0,0,0,0.25)",
-      "background:white",
-      "color:black",
-      "font:600 13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif",
-      "box-shadow:0 6px 18px rgba(0,0,0,0.15)",
-      "cursor:pointer",
-    ].join(";");
+  function showToast(text, variant) {
+    try {
+      const id = "__linkedmd_toast__";
+      const old = document.getElementById(id);
+      if (old) old.remove();
 
-    btn.addEventListener("click", async () => {
-      const prev = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = "Exporting...";
-      try {
-        await window.__li_export_md__();
-      } catch (e) {
-        console.error(e);
-        alert("Export failed. Open DevTools console for details.");
-      } finally {
-        btn.disabled = false;
-        btn.textContent = prev;
-      }
-    });
-
-    document.body.appendChild(btn);
+      const el = document.createElement("div");
+      el.id = id;
+      el.textContent = text;
+      const bg = variant === "error" ? "rgba(160, 22, 22, 0.94)" : "rgba(12, 84, 58, 0.95)";
+      el.style.cssText = [
+        "position:fixed",
+        "top:18px",
+        "right:18px",
+        "z-index:2147483647",
+        "padding:10px 14px",
+        "border-radius:12px",
+        "background:" + bg,
+        "color:#fff",
+        "font:600 12px/1.25 -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif",
+        "box-shadow:0 10px 26px rgba(0,0,0,0.22)",
+        "backdrop-filter: blur(3px)",
+      ].join(";");
+      document.documentElement.appendChild(el);
+      setTimeout(() => {
+        if (el && el.remove) el.remove();
+      }, 1800);
+    } catch (_) {}
   }
 
-  mount();
-  setInterval(mount, 1200);
+  chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+    if (!msg || msg.type !== "LINKEDMD_EXPORT") return;
+
+    if (running) {
+      sendResponse({ ok: false, error: "Export already in progress" });
+      return true;
+    }
+
+    running = true;
+    showToast("LinkedMD: exporting profile...", "info");
+
+    Promise.resolve(window.__li_export_md__())
+      .then(() => {
+        showToast("LinkedMD: markdown downloaded", "info");
+        sendResponse({ ok: true });
+      })
+      .catch((err) => {
+        console.error(err);
+        showToast("LinkedMD: export failed", "error");
+        sendResponse({
+          ok: false,
+          error: String((err && err.message) || err || "unknown error"),
+        });
+      })
+      .finally(() => {
+        running = false;
+      });
+
+    return true;
+  });
 })();

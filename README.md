@@ -1,101 +1,114 @@
 # LinkedMD
 
-Export a logged-in LinkedIn profile into one clean Markdown file in one click.
+LinkedMD is a polished Chrome/Arc extension that exports the **current LinkedIn profile** into a clean, structured Markdown file.
 
-No backend. No accounts. No API keys. Just local browser execution.
+It is local-first by design: no SaaS backend, no account, no API key, and no remote ingest service in this repo.
 
 ## Why this exists
 
-LinkedIn has great profile data but poor export ergonomics for writing workflows.
+LinkedIn profiles are high-value research input, but hard to reuse across modern workflows.
+LinkedMD makes profile data portable for:
 
-`LinkedMD` gives you a local exporter that:
-- expands profile content (including About and details pages)
-- strips obvious UI noise (ads/suggestions/navigation)
-- stitches profile sections into a single `.md`
-- works through either a bookmarklet or Tampermonkey userscript
+- recruiting and talent notes
+- founder and investor CRM
+- research and diligence
+- personal knowledge bases
+- AI-assisted writing and analysis
 
-## 60-second setup
+## What you get
 
-```bash
-npm run build
-```
+- One-click export from extension popup
+- Clean Markdown output with YAML frontmatter
+- Pulls from profile detail pages where available
+- Noise filtering (ads, suggested profiles, nav chrome)
+- Works in Chrome and Arc (Chromium extension path)
 
-Then:
-1. Open `docs/index.html` (or publish `docs/` to GitHub Pages).
-2. Install one of the two pathways below.
-3. Open any LinkedIn profile URL (`https://www.linkedin.com/in/...`).
-4. Run export.
+## Install
 
-You get a downloaded `.md` file and clipboard best-effort copy.
+### Option A (recommended): Chrome Web Store
 
-## Two pathways, one engine
+Install from your published Chrome Web Store listing for a no-dev-mode, one-click experience.
 
-Both pathways are generated from the same source file: `src/li_export_md.js`.
+### Option B: Local dev install (Arc/Chrome)
 
-- Bookmarklet
-  - Generated URL: `docs/bookmarklet.txt`
-  - Install via drag/drop from `docs/index.html`
-- Userscript
-  - Generated script: `userscript/linkedin-export-md.user.js`
-  - Install in Tampermonkey
+1. Run:
 
-### Arc browser copy/paste path
+   ```bash
+   npm run build
+   ```
 
-If drag-and-drop feels awkward in Arc:
-1. Open `docs/index.html`.
-2. Click **Copy bookmarklet URL**.
-3. Create any saved link/favorite in Arc.
-4. Paste the copied `javascript:...` URL as the address.
+2. Open `arc://extensions` (or `chrome://extensions`).
+3. Enable **Developer mode**.
+4. Click **Load unpacked**.
+5. Select `/Users/jonathanraphael/git/linkedmd/extension`.
+6. Open any LinkedIn profile URL (`https://www.linkedin.com/in/...`) and click the LinkedMD icon.
 
-## Guarantees (repo hygiene)
-
-- Single source of truth: `src/li_export_md.js`
-- Generated artifacts only:
-  - `userscript/linkedin-export-md.user.js`
-  - `docs/bookmarklet.txt`
-- Equivalence check built in:
-  - `npm run verify`
-  - fails if generated artifacts drift from source
-
-## Project layout
-
-```text
-.
-├─ src/
-│  └─ li_export_md.js            # exporter engine (source of truth)
-├─ tools/
-│  ├─ build_bookmarklet.py       # builds docs/bookmarklet.txt
-│  ├─ build_userscript.py        # builds userscript file
-│  └─ verify_artifacts.py        # enforces artifact equivalence
-├─ userscript/
-│  └─ linkedin-export-md.user.js # generated
-└─ docs/
-   ├─ index.html                 # GitHub Pages installer UI
-   └─ bookmarklet.txt            # generated
-```
-
-## Commands
+## Build and QA
 
 ```bash
-npm run build      # regenerate userscript + bookmarklet + verify
-npm run verify     # assert generated files match source
-npm run check      # syntax + py_compile + verify
-npm run dev        # serve docs/ at http://localhost:8787
+npm run build             # generate extension + store assets + verification
+npm run build:extension   # regenerate extension/content.js from src
+npm run build:store-assets
+npm run verify            # artifact sync + asset dimensions/modes
+npm run check             # JS/Python syntax + verify
+npm run build:cws-package # dist/linkedmd-extension.zip
+npm run dev               # serve docs/ at http://localhost:8787
 ```
 
-## Publish to GitHub Pages
+## Architecture
 
-1. Run `npm run build`.
-2. Commit updated generated files.
-3. In GitHub repo settings, enable Pages from `/docs`.
-4. Share the Pages URL.
+Single source of truth:
 
-## Limitations
+- `/Users/jonathanraphael/git/linkedmd/src/li_export_md.js`
 
-- LinkedIn DOM changes can require heuristic updates.
-- Some browsers place limits on bookmarklet URL length.
-- This is for personal, manual export from pages you can already access.
+Generated outputs:
+
+- `/Users/jonathanraphael/git/linkedmd/extension/content.js`
+- `/Users/jonathanraphael/git/linkedmd/store-assets/*`
+
+Extension runtime:
+
+- `/Users/jonathanraphael/git/linkedmd/extension/manifest.json`
+- `/Users/jonathanraphael/git/linkedmd/extension/background.js`
+- `/Users/jonathanraphael/git/linkedmd/extension/popup.html`
+- `/Users/jonathanraphael/git/linkedmd/extension/popup.css`
+- `/Users/jonathanraphael/git/linkedmd/extension/popup.js`
+- `/Users/jonathanraphael/git/linkedmd/extension/icons/*`
+
+## Chrome Web Store assets
+
+Generated by:
+
+```bash
+npm run build:store-assets
+```
+
+Assets:
+
+- Store icon: `/Users/jonathanraphael/git/linkedmd/store-assets/store-icon-128.png`
+- Screenshots: `/Users/jonathanraphael/git/linkedmd/store-assets/screenshots/*.png`
+- Small promo tile: `/Users/jonathanraphael/git/linkedmd/store-assets/small-promo-440x280.png`
+- Marquee promo tile: `/Users/jonathanraphael/git/linkedmd/store-assets/marquee-promo-1400x560.png`
+- Listing text pack: `/Users/jonathanraphael/git/linkedmd/store-assets/chrome-web-store-fields.md`
+
+Optional custom source assets:
+
+- Logo source: `/Users/jonathanraphael/git/linkedmd/store-assets/images/logo.png`
+- Screenshot source: `/Users/jonathanraphael/git/linkedmd/store-assets/images/demo1280.png`
+
+## Publish checklist
+
+1. `npm run build && npm run check && npm run build:cws-package`
+2. Upload `/Users/jonathanraphael/git/linkedmd/dist/linkedmd-extension.zip` to Chrome Web Store.
+3. Upload assets from `/Users/jonathanraphael/git/linkedmd/store-assets/`.
+4. Paste listing text from `/Users/jonathanraphael/git/linkedmd/store-assets/chrome-web-store-fields.md`.
+5. Set homepage/support URLs.
+
+## Privacy and support
+
+- Privacy: `/Users/jonathanraphael/git/linkedmd/docs/privacy.html`
+- Support: `/Users/jonathanraphael/git/linkedmd/docs/support.html`
 
 ## License
 
-MIT (`LICENSE`).
+MIT (`/Users/jonathanraphael/git/linkedmd/LICENSE`).

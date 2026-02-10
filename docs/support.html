@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LinkedMD Support</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+        color: #102116;
+        background: linear-gradient(165deg, #f2f5f2, #e9f0ea);
+      }
+      .wrap {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 34px 20px 60px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #c9d9cd;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 14px 34px rgba(16, 40, 26, 0.08);
+      }
+      h1,
+      h2 {
+        margin-top: 0;
+      }
+      h2 {
+        margin-top: 16px;
+      }
+      p,
+      li {
+        line-height: 1.5;
+      }
+      code {
+        background: #f4f8f5;
+        border: 1px solid #d2dfd6;
+        padding: 1px 6px;
+        border-radius: 6px;
+      }
+      a {
+        color: #0e6d43;
+      }
+      .muted {
+        color: #4a6252;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <article class="card">
+        <h1>LinkedMD Support</h1>
+        <p class="muted">Need help or want to report an issue? Start here.</p>
+
+        <h2>Quick checks</h2>
+        <ol>
+          <li>Open a profile URL that matches <code>https://www.linkedin.com/in/...</code>.</li>
+          <li>Refresh the page once before export.</li>
+          <li>Click the extension icon and run <strong>Export Current Profile</strong>.</li>
+        </ol>
+
+        <h2>Common issues</h2>
+        <p><strong>Export button is disabled</strong><br />
+          You are likely not on a LinkedIn profile page. Open a profile URL and try again.
+        </p>
+
+        <p><strong>Export misses section content</strong><br />
+          LinkedIn UI changes can alter selectors. Capture the profile URL and file a bug with details.
+        </p>
+
+        <p><strong>No file downloaded</strong><br />
+          Check browser download permissions and popup blockers, then retry.
+        </p>
+
+        <h2>Report a bug</h2>
+        <p>
+          Open an issue at
+          <a href="https://github.com/jonaraphael/linkedmd/issues">GitHub Issues</a>
+          with:
+        </p>
+        <ul>
+          <li>Browser and version (Arc/Chrome)</li>
+          <li>Extension version</li>
+          <li>Profile URL pattern (not private content)</li>
+          <li>What you expected vs what happened</li>
+        </ul>
+
+        <h2>Project links</h2>
+        <ul>
+          <li><a href="https://github.com/jonaraphael/linkedmd">Repository</a></li>
+          <li><a href="./privacy.html">Privacy Policy</a></li>
+        </ul>
+      </article>
+    </main>
+  </body>
+</html>

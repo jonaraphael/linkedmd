@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LinkedMD</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="logo" aria-hidden="true">LM</div>
+        <div>
+          <h1>LinkedMD</h1>
+          <p>Export LinkedIn profiles to clean Markdown.</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="status-row">
+          <span id="dot" class="dot"></span>
+          <span id="status">Checking current tab...</span>
+        </div>
+        <button id="exportBtn" class="primary" type="button">Export Current Profile</button>
+        <p id="hint" class="hint">Open a LinkedIn profile tab first.</p>
+      </section>
+
+      <section class="meta">
+        <div class="chip">Local only</div>
+        <div class="chip">No backend</div>
+        <div class="chip">One click</div>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

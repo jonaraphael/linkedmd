@@ -3,17 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>LinkedIn -> Markdown</title>
+    <title>LinkedMD</title>
     <style>
       :root {
-        --bg-a: #f2f4f1;
-        --bg-b: #e8efe9;
-        --ink: #102116;
-        --muted: #425446;
+        --ink: #101f15;
+        --muted: #4a6252;
+        --line: #c9d9cd;
         --card: #ffffff;
-        --line: #c7d6c9;
-        --accent: #0f6f43;
-        --accent-ink: #ffffff;
+        --accent: #0e6d43;
+        --accent-dark: #0a5a3a;
       }
 
       * {
@@ -22,230 +20,235 @@
 
       body {
         margin: 0;
-        font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
         color: var(--ink);
+        font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
         background:
-          radial-gradient(circle at 10% -10%, #ffffff 0%, transparent 38%),
-          radial-gradient(circle at 90% 0%, #d7f0dd 0%, transparent 35%),
-          linear-gradient(160deg, var(--bg-a), var(--bg-b));
+          radial-gradient(circle at 9% -20%, #ffffff 0%, transparent 36%),
+          radial-gradient(circle at 93% 5%, #d7efde 0%, transparent 34%),
+          linear-gradient(165deg, #f2f5f2, #e9f0ea);
       }
 
       .wrap {
-        max-width: 920px;
+        max-width: 1120px;
         margin: 0 auto;
-        padding: 40px 20px 80px;
+        padding: 34px 20px 68px;
       }
 
       .hero {
+        display: grid;
+        grid-template-columns: 84px 1fr;
+        gap: 16px;
+        align-items: center;
         margin-bottom: 18px;
+      }
+
+      .logo {
+        width: 84px;
+        height: 84px;
+        border-radius: 22px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 1.65rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        background: linear-gradient(135deg, var(--accent), #209860);
+        box-shadow: 0 18px 36px rgba(14, 103, 66, 0.3);
       }
 
       h1 {
         margin: 0;
-        font-size: clamp(2.1rem, 5vw, 3.2rem);
+        font-size: clamp(2.2rem, 6vw, 3.7rem);
         letter-spacing: -0.02em;
-        line-height: 1.02;
       }
 
       .subtitle {
-        margin: 14px 0 0;
+        margin: 10px 0 0;
         color: var(--muted);
-        font-size: 1.06rem;
-        max-width: 66ch;
+        max-width: 74ch;
+      }
+
+      .grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       }
 
       .card {
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 18px;
-        margin: 14px 0;
         background: var(--card);
-        box-shadow: 0 14px 40px rgba(18, 45, 29, 0.08);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 14px 38px rgba(16, 40, 26, 0.08);
       }
 
       .kicker {
-        font-size: 0.79rem;
+        display: inline-block;
+        margin-bottom: 8px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid #bfd4c6;
+        background: #f4faf6;
+        color: #1f4b34;
+        letter-spacing: 0.06em;
+        font-size: 0.72rem;
         font-weight: 700;
-        color: var(--accent);
-        letter-spacing: 0.07em;
         text-transform: uppercase;
       }
 
       h2 {
-        margin: 8px 0 10px;
+        margin: 4px 0 8px;
         font-size: 1.22rem;
       }
 
       p,
       li {
-        line-height: 1.45;
+        line-height: 1.48;
       }
 
       ol,
       ul {
         margin: 0;
-        padding-left: 20px;
+        padding-left: 22px;
       }
 
       .actions {
+        margin-top: 12px;
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
-        margin: 12px 0;
       }
 
       .btn {
         display: inline-block;
         border-radius: 12px;
-        border: 1px solid var(--accent);
         padding: 10px 14px;
-        font-weight: 700;
         text-decoration: none;
-        color: var(--accent-ink);
-        background: var(--accent);
+        font-weight: 700;
+        border: 1px solid var(--accent);
+      }
+
+      .btn.primary {
+        color: #fff;
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
       }
 
       .btn.alt {
-        background: #f5faf6;
         color: var(--accent);
-      }
-
-      .btn[disabled] {
-        opacity: 0.55;
-        cursor: not-allowed;
+        background: #f5faf7;
       }
 
       .code {
-        background: #f5f8f5;
-        border: 1px solid var(--line);
+        margin-top: 11px;
         border-radius: 10px;
+        border: 1px solid #ccdacf;
+        background: #f4f8f5;
         padding: 10px;
         font-family: "SFMono-Regular", Menlo, Consolas, Monaco, monospace;
-        white-space: pre-wrap;
-        word-break: break-all;
-        font-size: 0.78rem;
+        font-size: 0.82rem;
+      }
+
+      .gallery {
+        margin-top: 12px;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      }
+
+      .gallery img {
+        width: 100%;
+        border: 1px solid #c9d9cd;
+        border-radius: 12px;
       }
 
       .muted {
         color: var(--muted);
       }
 
-      .pill {
-        display: inline-block;
-        border-radius: 999px;
-        padding: 4px 10px;
-        border: 1px solid var(--line);
-        background: #f5faf6;
-        font-size: 0.83rem;
-        margin-right: 6px;
-      }
-
-      .stack {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
+      .foot {
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 0.9rem;
       }
     </style>
   </head>
   <body>
     <main class="wrap">
       <header class="hero">
-        <div class="stack">
-          <span class="pill">Local-only</span>
-          <span class="pill">No backend</span>
-          <span class="pill">Single JS source</span>
+        <div class="logo">LM</div>
+        <div>
+          <h1>LinkedMD</h1>
+          <p class="subtitle">
+            Export LinkedIn profiles to clean Markdown in one click. Built for recruiters,
+            researchers, and builders who want profile data in reusable docs instead of trapped UI.
+          </p>
         </div>
-        <h1>LinkedIn -> Markdown</h1>
-        <p class="subtitle">
-          Export a logged-in LinkedIn profile page into one dense <code>.md</code> file. Bookmarklet
-          and userscript both run the same exporter engine.
-        </p>
       </header>
 
-      <section class="card">
-        <div class="kicker">Path 1</div>
-        <h2>Bookmarklet (fastest)</h2>
-        <ol>
-          <li>Open this page and wait for the button to load.</li>
-          <li>Drag <strong>Export LinkedIn -> MD</strong> into your browser bookmarks/favorites.</li>
-          <li>Open any LinkedIn profile URL like <code>/in/...</code>, then click it.</li>
-        </ol>
+      <section class="grid">
+        <article class="card">
+          <div class="kicker">Install</div>
+          <h2>Chrome Web Store</h2>
+          <p class="muted">Best experience for non-technical users. One click, no developer mode.</p>
+          <div class="actions">
+            <a class="btn primary" href="#" id="cwsLink">Install LinkedMD</a>
+            <a class="btn alt" href="https://github.com/jonaraphael/linkedmd">GitHub</a>
+          </div>
+          <div class="code">npm run build:cws-package</div>
+        </article>
 
-        <div class="actions">
-          <a id="bookmarkletBtn" class="btn" href="#" draggable="true">Export LinkedIn -> MD</a>
-          <button id="copyBtn" class="btn alt" type="button">Copy bookmarklet URL</button>
-        </div>
-
-        <details>
-          <summary>Arc copy/paste path</summary>
-          <p class="muted">
-            If drag-and-drop is awkward in Arc, copy the URL below, create any saved link/favorite,
-            and paste this as the address.
-          </p>
-          <div id="bookmarkletText" class="code">Loading bookmarklet URL...</div>
-        </details>
+        <article class="card">
+          <div class="kicker">Dev Install</div>
+          <h2>Arc / Chrome local install</h2>
+          <ol>
+            <li>Run <code>npm run build</code>.</li>
+            <li>Open <code>arc://extensions</code> (or <code>chrome://extensions</code>).</li>
+            <li>Enable Developer mode.</li>
+            <li>Click <strong>Load unpacked</strong>.</li>
+            <li>Select the <code>extension/</code> folder.</li>
+          </ol>
+        </article>
       </section>
 
-      <section class="card">
-        <div class="kicker">Path 2</div>
-        <h2>Userscript fallback (same exporter logic)</h2>
-        <ol>
-          <li>Install Tampermonkey.</li>
-          <li>Install <code>userscript/linkedin-export-md.user.js</code> from this repo.</li>
-          <li>Use the persistent <strong>Export MD</strong> button on LinkedIn pages.</li>
-        </ol>
-      </section>
-
-      <section class="card">
-        <div class="kicker">Build</div>
-        <h2>How this page stays in sync</h2>
+      <section class="card" style="margin-top: 14px">
+        <div class="kicker">Store Visuals</div>
+        <h2>Generated listing assets</h2>
         <p class="muted">
-          The bookmarklet URL is loaded from <code>docs/bookmarklet.txt</code>, generated from
-          <code>src/li_export_md.js</code>. The userscript is generated from the same source file.
+          LinkedMD ships with ready-to-upload screenshots and promo tiles for Chrome Web Store.
         </p>
-        <div class="code">npm run build</div>
+        <div class="gallery">
+          <img src="../store-assets/screenshots/01-one-click-export.png" alt="One-click export screenshot" />
+          <img src="../store-assets/screenshots/02-profile-to-markdown.png" alt="Profile to markdown screenshot" />
+          <img src="../store-assets/screenshots/03-popup-experience.png" alt="Popup screenshot" />
+          <img src="../store-assets/screenshots/04-local-only-security.png" alt="Local-only screenshot" />
+          <img src="../store-assets/screenshots/05-section-coverage.png" alt="Section coverage screenshot" />
+        </div>
+      </section>
+
+      <section class="card" style="margin-top: 14px">
+        <div class="kicker">Trust</div>
+        <h2>Local-first and transparent</h2>
+        <ul>
+          <li>No account system in this repo</li>
+          <li>No backend ingestion service</li>
+          <li>Source-visible exporter logic</li>
+        </ul>
+        <p class="foot">
+          Policy and support:
+          <a href="./privacy.html">Privacy</a>
+          ·
+          <a href="./support.html">Support</a>
+        </p>
       </section>
     </main>
-
     <script>
-      (async function loadBookmarklet() {
-        const btn = document.getElementById("bookmarkletBtn");
-        const copyBtn = document.getElementById("copyBtn");
-        const textEl = document.getElementById("bookmarkletText");
-
-        let url = "";
-
-        try {
-          const res = await fetch("./bookmarklet.txt", { cache: "no-store" });
-          if (!res.ok) throw new Error("bookmarklet.txt not found");
-          url = (await res.text()).trim();
-          if (!url.startsWith("javascript:")) throw new Error("invalid bookmarklet payload");
-
-          btn.href = url;
-          textEl.textContent = url;
-        } catch (err) {
-          console.error(err);
-          btn.removeAttribute("href");
-          btn.setAttribute("aria-disabled", "true");
-          textEl.textContent = "Unable to load bookmarklet.txt. Run npm run build and redeploy docs/.";
-        }
-
-        copyBtn.addEventListener("click", async () => {
-          if (!url) return;
-          try {
-            await navigator.clipboard.writeText(url);
-            copyBtn.textContent = "Copied";
-            setTimeout(() => {
-              copyBtn.textContent = "Copy bookmarklet URL";
-            }, 1200);
-          } catch (_) {
-            copyBtn.textContent = "Copy failed";
-            setTimeout(() => {
-              copyBtn.textContent = "Copy bookmarklet URL";
-            }, 1200);
-          }
-        });
-      })();
+      // Replace this with your published Chrome Web Store URL.
+      const CWS_URL = "#";
+      const cws = document.getElementById("cwsLink");
+      cws.href = CWS_URL;
+      if (CWS_URL === "#") {
+        cws.textContent = "Set your Chrome Web Store URL";
+      }
     </script>
   </body>
 </html>
