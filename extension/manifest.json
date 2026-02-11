@@ -3,8 +3,8 @@
   "name": "LinkedMD",
   "short_name": "LinkedMD",
   "description": "Export the current LinkedIn profile page to Markdown.",
-  "version": "1.0.0",
-  "permissions": ["activeTab", "scripting", "tabs", "contextMenus"],
+  "version": "1.0.1",
+  "permissions": ["tabs", "contextMenus"],
   "host_permissions": ["https://www.linkedin.com/*"],
   "background": {
     "service_worker": "background.js"
