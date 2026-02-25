@@ -114,8 +114,12 @@
       return t || "linkedin-profile";
     }
   
-    function downloadText(filename, text) {
-      const blob = new Blob([text], { type: "text/markdown;charset=utf-8" });
+    function normalizeExportFormat(format) {
+      return String(format || "").toLowerCase() === "json" ? "json" : "markdown";
+    }
+  
+    function downloadText(filename, text, mimeType) {
+      const blob = new Blob([text], { type: mimeType || "text/markdown;charset=utf-8" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
       a.download = filename;
@@ -1518,7 +1522,8 @@
       return byTitle;
     }
   
-    async function exportProfileMarkdown() {
+    async function exportProfileMarkdown(options) {
+      const exportFormat = normalizeExportFormat(options && options.format);
       let helperWin = null;
       function ensureHelperWindow() {
         if (helperWin && !helperWin.closed) return helperWin;
@@ -1564,17 +1569,12 @@
           if (pathName) name = pathName;
         }
   
-        const fm =
-          "---\n" +
-          `source: ${JSON.stringify(location.href)}\n` +
-          `exported_at: ${JSON.stringify(new Date().toISOString())}\n` +
-          `title: ${JSON.stringify(document.title || "")}\n` +
-          "---\n\n";
-  
-        let out = fm;
-        out += `# ${name}\n\n`;
+        const sourceUrl = location.href;
+        const exportedAt = new Date().toISOString();
+        const pageTitle = document.title || "";
+        const profileName = cleanInline(name || "") || "LinkedIn Profile";
         const metaLine = [headline, loc].filter(Boolean).join(" \u00b7 ");
-        if (metaLine) out += `${metaLine}\n\n`;
+        const sectionEntries = [];
         const discoveredLinksByTitle = new Map();
   
         for (const section of SECTIONS) {
@@ -1591,7 +1591,12 @@
           }
         }
   
-        if (about.trim()) out += `## About\n\n${about.trim()}\n\n`;
+        if (about.trim()) {
+          sectionEntries.push({
+            title: "About",
+            content: about.trim(),
+          });
+        }
   
         for (const section of SECTIONS) {
           if (section.kind !== "details") continue;
@@ -1638,13 +1643,54 @@
             md = sectionFromMain(main, section.title);
           }
   
-          if (md.trim()) out += `## ${section.title}\n\n${md.trim()}\n\n`;
+          if (md.trim()) {
+            sectionEntries.push({
+              title: section.title,
+              content: md.trim(),
+            });
+          }
         }
   
-        out = compactMarkdown(out);
+        let out = "";
+        let filename = "";
+        let mimeType = "text/markdown;charset=utf-8";
   
-        const filename = sanitizeFilename(name || document.title) + ".md";
-        downloadText(filename, out);
+        if (exportFormat === "json") {
+          out =
+            JSON.stringify(
+              {
+                source: sourceUrl,
+                exported_at: exportedAt,
+                title: pageTitle,
+                name: profileName,
+                headline: headline || "",
+                location: loc || "",
+                sections: sectionEntries,
+              },
+              null,
+              2
+            ) + "\n";
+          filename = sanitizeFilename(profileName || pageTitle) + ".json";
+          mimeType = "application/json;charset=utf-8";
+        } else {
+          const fm =
+            "---\n" +
+            `source: ${JSON.stringify(sourceUrl)}\n` +
+            `exported_at: ${JSON.stringify(exportedAt)}\n` +
+            `title: ${JSON.stringify(pageTitle)}\n` +
+            "---\n\n";
+  
+          out = fm;
+          out += `# ${profileName}\n\n`;
+          if (metaLine) out += `${metaLine}\n\n`;
+          for (const section of sectionEntries) {
+            out += `## ${section.title}\n\n${section.content}\n\n`;
+          }
+          out = compactMarkdown(out);
+          filename = sanitizeFilename(profileName || pageTitle) + ".md";
+        }
+  
+        downloadText(filename, out, mimeType);
   
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1666,6 +1712,10 @@
   }
 
   let running = false;
+
+  function normalizeExportFormat(format) {
+    return String(format || "").toLowerCase() === "json" ? "json" : "markdown";
+  }
 
   function showToast(text, variant) {
     try {
@@ -1699,6 +1749,7 @@
 
   chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (!msg || msg.type !== "LINKEDMD_EXPORT") return;
+    const format = normalizeExportFormat(msg.format);
 
     if (running) {
       sendResponse({ ok: false, error: "Export already in progress" });
@@ -1708,9 +1759,10 @@
     running = true;
     showToast("LinkedMD: exporting profile...", "info");
 
-    Promise.resolve(window.__li_export_md__())
+    Promise.resolve(window.__li_export_md__({ format }))
       .then(() => {
-        showToast("LinkedMD: markdown downloaded", "info");
+        const doneLabel = format === "json" ? "JSON" : "markdown";
+        showToast("LinkedMD: " + doneLabel + " downloaded", "info");
         sendResponse({ ok: true });
       })
       .catch((err) => {

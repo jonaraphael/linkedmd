@@ -12,7 +12,7 @@
         <div class="logo" aria-hidden="true">LM</div>
         <div>
           <h1>LinkedMD</h1>
-          <p>Export LinkedIn profiles to clean Markdown.</p>
+          <p>Export LinkedIn profiles to clean Markdown or JSON.</p>
         </div>
       </section>
 
@@ -21,6 +21,13 @@
           <span id="dot" class="dot"></span>
           <span id="status">Checking current tab...</span>
         </div>
+        <label class="field" for="formatSelect">
+          <span>Format</span>
+          <select id="formatSelect" class="format-select">
+            <option value="markdown" selected>Markdown (.md)</option>
+            <option value="json">JSON (.json)</option>
+          </select>
+        </label>
         <button id="exportBtn" class="primary" type="button">Export Current Profile</button>
         <p id="hint" class="hint">Open a LinkedIn profile tab first.</p>
       </section>

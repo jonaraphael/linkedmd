@@ -4,6 +4,7 @@ const statusEl = document.getElementById("status");
 const dotEl = document.getElementById("dot");
 const hintEl = document.getElementById("hint");
 const exportBtn = document.getElementById("exportBtn");
+const formatSelect = document.getElementById("formatSelect");
 
 function setStatus(text, kind) {
   statusEl.textContent = text;
@@ -27,6 +28,14 @@ function isLinkedInProfileUrl(url) {
   return /^https:\/\/www\.linkedin\.com\/in\/[^/]+/i.test(url);
 }
 
+function getSelectedFormat() {
+  return formatSelect && formatSelect.value === "json" ? "json" : "markdown";
+}
+
+function selectedFormatLabel() {
+  return getSelectedFormat() === "json" ? "JSON" : "Markdown";
+}
+
 async function refreshState() {
   const tab = await getActiveTab();
   const ok = tab && isLinkedInProfileUrl(tab.url || "");
@@ -34,7 +43,7 @@ async function refreshState() {
 
   if (ok) {
     setStatus("Ready on current LinkedIn profile", "ready");
-    setHint("Click export to download a Markdown file.", false);
+    setHint(`Click export to download a ${selectedFormatLabel()} file.`, false);
   } else {
     setStatus("Not on a LinkedIn profile", "bad");
     setHint("Open a profile URL like linkedin.com/in/username, then try again.", false);
@@ -42,17 +51,20 @@ async function refreshState() {
 }
 
 async function runExport() {
+  const format = getSelectedFormat();
+  const formatLabel = selectedFormatLabel();
   exportBtn.disabled = true;
+  if (formatSelect) formatSelect.disabled = true;
   const oldLabel = exportBtn.textContent;
-  exportBtn.textContent = "Exporting...";
-  setStatus("Running export...", "ready");
+  exportBtn.textContent = `Exporting ${formatLabel}...`;
+  setStatus(`Running ${formatLabel} export...`, "ready");
   setHint("This can take a few seconds for long profiles.", false);
 
   try {
-    const res = await chrome.runtime.sendMessage({ type: "LINKEDMD_RUN_EXPORT" });
+    const res = await chrome.runtime.sendMessage({ type: "LINKEDMD_RUN_EXPORT", format });
     if (res && res.ok) {
       setStatus("Export complete", "ready");
-      setHint("Markdown downloaded. You can run again on another profile.", false);
+      setHint(`${formatLabel} downloaded. You can run again on another profile.`, false);
       exportBtn.textContent = "Export Again";
     } else {
       setStatus("Export failed", "bad");
@@ -66,12 +78,19 @@ async function runExport() {
   } finally {
     const tab = await getActiveTab();
     exportBtn.disabled = !tab || !isLinkedInProfileUrl(tab.url || "");
+    if (formatSelect) formatSelect.disabled = false;
   }
 }
 
 exportBtn.addEventListener("click", runExport);
+if (formatSelect) {
+  formatSelect.addEventListener("change", () => {
+    refreshState().catch(() => {});
+  });
+}
 refreshState().catch(() => {
   setStatus("Unable to read current tab", "bad");
   setHint("Check extension permissions and reload this page.", true);
   exportBtn.disabled = true;
+  if (formatSelect) formatSelect.disabled = true;
 });

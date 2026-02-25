@@ -51,6 +51,10 @@ def build_extension_content(src_js: str) -> str:
 
   let running = false;
 
+  function normalizeExportFormat(format) {
+    return String(format || "").toLowerCase() === "json" ? "json" : "markdown";
+  }
+
   function showToast(text, variant) {
     try {
       const id = "__linkedmd_toast__";
@@ -83,6 +87,7 @@ def build_extension_content(src_js: str) -> str:
 
   chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (!msg || msg.type !== "LINKEDMD_EXPORT") return;
+    const format = normalizeExportFormat(msg.format);
 
     if (running) {
       sendResponse({ ok: false, error: "Export already in progress" });
@@ -92,9 +97,10 @@ def build_extension_content(src_js: str) -> str:
     running = true;
     showToast("LinkedMD: exporting profile...", "info");
 
-    Promise.resolve(window.__li_export_md__())
+    Promise.resolve(window.__li_export_md__({ format }))
       .then(() => {
-        showToast("LinkedMD: markdown downloaded", "info");
+        const doneLabel = format === "json" ? "JSON" : "markdown";
+        showToast("LinkedMD: " + doneLabel + " downloaded", "info");
         sendResponse({ ok: true });
       })
       .catch((err) => {

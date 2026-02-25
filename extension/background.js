@@ -11,12 +11,19 @@ function isLinkedInUrl(url) {
   return typeof url === "string" && url.startsWith("https://www.linkedin.com/");
 }
 
-async function runExportOnTab(tab) {
+function normalizeExportFormat(format) {
+  return String(format || "").toLowerCase() === "json" ? "json" : "markdown";
+}
+
+async function runExportOnTab(tab, format) {
   if (!tab || typeof tab.id !== "number") return { ok: false, error: "No active tab" };
   if (!isLinkedInUrl(tab.url)) return { ok: false, error: "Open a LinkedIn profile tab first" };
 
   try {
-    const res = await chrome.tabs.sendMessage(tab.id, { type: "LINKEDMD_EXPORT" });
+    const res = await chrome.tabs.sendMessage(tab.id, {
+      type: "LINKEDMD_EXPORT",
+      format: normalizeExportFormat(format),
+    });
     if (res && res.ok) return { ok: true };
     return { ok: false, error: (res && res.error) || "Export failed" };
   } catch (_) {
@@ -24,9 +31,9 @@ async function runExportOnTab(tab) {
   }
 }
 
-async function runExportOnActiveTab() {
+async function runExportOnActiveTab(format) {
   const tab = await getActiveTab();
-  return runExportOnTab(tab);
+  return runExportOnTab(tab, format);
 }
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -42,17 +49,17 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (!info || info.menuItemId !== MENU_ID) return;
-  await runExportOnTab(tab);
+  await runExportOnTab(tab, "markdown");
 });
 
 chrome.commands.onCommand.addListener(async (command) => {
   if (command !== "export_profile") return;
-  await runExportOnActiveTab();
+  await runExportOnActiveTab("markdown");
 });
 
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (!msg || msg.type !== "LINKEDMD_RUN_EXPORT") return;
-  runExportOnActiveTab()
+  runExportOnActiveTab(msg.format)
     .then((result) => sendResponse(result))
     .catch((err) => sendResponse({ ok: false, error: String(err && err.message ? err.message : err) }));
   return true;
